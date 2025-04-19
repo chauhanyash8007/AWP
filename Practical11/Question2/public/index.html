@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>File Manager</title>
+  </head>
+  <body>
+    <h1>File Manager</h1>
+
+    <h2>Create New File</h2>
+    <form action="/create" method="POST">
+      <input
+        type="text"
+        name="filename"
+        placeholder="Enter filename"
+        required
+      />
+      <button type="submit">Create File</button>
+    </form>
+
+    <h2>Rename File</h2>
+    <form action="/rename" method="POST">
+      <input
+        type="text"
+        name="oldname"
+        placeholder="Current filename"
+        required
+      />
+      <input type="text" name="newname" placeholder="New filename" required />
+      <button type="submit">Rename File</button>
+    </form>
+
+    <h2>Available Files</h2>
+    <ul id="file-list"></ul>
+
+    <script>
+      async function loadFiles() {
+        const res = await fetch("/files");
+        const files = await res.json();
+        const list = document.getElementById("file-list");
+        list.innerHTML = "";
+        files.forEach((file) => {
+          const li = document.createElement("li");
+          li.textContent = file;
+          list.appendChild(li);
+        });
+      }
+      loadFiles();
+    </script>
+  </body>
+</html>

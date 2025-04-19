@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Library SPA</title>
+    <style>
+      body {
+        font-family: Arial;
+        background: #f4f4f4;
+        padding: 20px;
+      }
+      input,
+      button {
+        padding: 10px;
+        margin: 5px 0;
+        width: 300px;
+      }
+      button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      h1,
+      h2 {
+        margin-top: 30px;
+      }
+      .book-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .book-card {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 220px;
+      }
+      .book-card h3 {
+        margin: 0 0 10px;
+      }
+      #result,
+      #status {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📚 Library Dashboard</h1>
+
+    <h2>Add a New Book</h2>
+    <input type="text" id="title" placeholder="Book Title" />
+    <input type="text" id="author" placeholder="Author Name" />
+    <button onclick="addBook()">Add Book</button>
+    <div id="status"></div>
+
+    <h2>Search for a Book</h2>
+    <input type="text" id="searchTitle" placeholder="Enter book title" />
+    <button onclick="searchBook()">Search</button>
+    <div id="result"></div>
+
+    <h2>All Books in Library</h2>
+    <div class="book-list" id="bookList"></div>
+
+    <script>
+      async function loadBooks() {
+        const res = await fetch("/books");
+        const books = await res.json();
+        const container = document.getElementById("bookList");
+        container.innerHTML = "";
+        books.forEach((book) => {
+          const card = document.createElement("div");
+          card.className = "book-card";
+          card.innerHTML = `<h3>${book.title}</h3><p>by ${book.author}</p>`;
+          container.appendChild(card);
+        });
+      }
+
+      async function addBook() {
+        const title = document.getElementById("title").value.trim();
+        const author = document.getElementById("author").value.trim();
+        if (!title || !author) {
+          document.getElementById("status").textContent =
+            "Please fill in both fields.";
+          return;
+        }
+        const res = await fetch("/add-book", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, author }),
+        });
+        const data = await res.json();
+        document.getElementById("status").textContent = data.message;
+        document.getElementById("title").value = "";
+        document.getElementById("author").value = "";
+        loadBooks();
+      }
+
+      async function searchBook() {
+        const title = document.getElementById("searchTitle").value.trim();
+        if (!title) {
+          document.getElementById("result").textContent =
+            "Please enter a title.";
+          return;
+        }
+        const res = await fetch(`/search?title=${encodeURIComponent(title)}`);
+        const data = await res.json();
+        if (data.found) {
+          document.getElementById(
+            "result"
+          ).textContent = `✅ Found: "${data.book.title}" by ${data.book.author}`;
+        } else {
+          document.getElementById("result").textContent = "❌ Book not found.";
+        }
+      }
+
+      // Load books on page load
+      loadBooks();
+    </script>
+  </body>
+</html>
+
+<!-- ✅ Conclusion: This project successfully demonstrates a Single Page Application
+(SPA) for managing a library using Node.js, MongoDB, and a simple web UI.
+Librarians can easily add new books, view all existing books, and search for
+availability in real time. It provides a clean and responsive user experience
+suitable for small-scale library systems. -->

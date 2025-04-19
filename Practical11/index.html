@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>🗃️ File Manager</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-light p-5">
+    <div class="container">
+      <h1 class="mb-4">🗂️ File Manager (Uploads Folder)</h1>
+
+      <div class="row g-4">
+        <!-- Create -->
+        <div class="col-md-6">
+          <div class="card p-3 shadow-sm">
+            <h5>Create File</h5>
+            <input
+              type="text"
+              id="createName"
+              class="form-control"
+              placeholder="Filename"
+            />
+            <button class="btn btn-primary mt-2" onclick="createFile()">
+              Create
+            </button>
+          </div>
+        </div>
+
+        <!-- Write -->
+        <div class="col-md-6">
+          <div class="card p-3 shadow-sm">
+            <h5>Write to File</h5>
+            <input
+              type="text"
+              id="writeName"
+              class="form-control"
+              placeholder="Filename"
+            />
+            <textarea
+              id="writeContent"
+              class="form-control mt-2"
+              rows="3"
+              placeholder="Content to write"
+            ></textarea>
+            <button class="btn btn-warning mt-2" onclick="writeFile()">
+              Write
+            </button>
+          </div>
+        </div>
+
+        <!-- Read -->
+        <div class="col-md-6">
+          <div class="card p-3 shadow-sm">
+            <h5>Read File</h5>
+            <input
+              type="text"
+              id="readName"
+              class="form-control"
+              placeholder="Filename"
+            />
+            <button class="btn btn-success mt-2" onclick="readFile()">
+              Read
+            </button>
+            <pre class="bg-white p-2 mt-2 border rounded" id="readOutput"></pre>
+          </div>
+        </div>
+
+        <!-- Delete -->
+        <div class="col-md-6">
+          <div class="card p-3 shadow-sm">
+            <h5>Delete File</h5>
+            <input
+              type="text"
+              id="deleteName"
+              class="form-control"
+              placeholder="Filename"
+            />
+            <button class="btn btn-danger mt-2" onclick="deleteFile()">
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- List Files -->
+        <div class="col-12">
+          <div class="card p-3 shadow-sm">
+            <h5>📄 Files in Uploads Folder</h5>
+            <button class="btn btn-outline-primary mb-3" onclick="listFiles()">
+              Refresh List
+            </button>
+            <div id="file-list" class="list-group"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const apiUrl = "http://localhost:3000";
+
+      async function createFile() {
+        const filename = document.getElementById("createName").value;
+        const res = await fetch(`${apiUrl}/create`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename }),
+        });
+        alert(await res.text());
+      }
+
+      async function writeFile() {
+        const filename = document.getElementById("writeName").value;
+        const content = document.getElementById("writeContent").value;
+        const res = await fetch(`${apiUrl}/write`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename, content }),
+        });
+        alert(await res.text());
+      }
+
+      async function readFile() {
+        const filename = document.getElementById("readName").value;
+        const res = await fetch(`${apiUrl}/read/${filename}`);
+        if (res.ok) {
+          const text = await res.text();
+          document.getElementById("readOutput").innerText = text;
+        } else {
+          alert(await res.text());
+        }
+      }
+
+      async function deleteFile() {
+        const filename = document.getElementById("deleteName").value;
+        const res = await fetch(`${apiUrl}/delete/${filename}`, {
+          method: "DELETE",
+        });
+        alert(await res.text());
+      }
+
+      async function listFiles() {
+        const res = await fetch(`${apiUrl}/list`);
+        const files = await res.json();
+        const list = document.getElementById("file-list");
+        list.innerHTML = "";
+        files.forEach((file) => {
+          const item = document.createElement("div");
+          item.className =
+            "list-group-item d-flex justify-content-between align-items-center";
+          item.innerHTML = `
+          <span>${file}</span>
+          <a class="btn btn-sm btn-outline-success" href="${apiUrl}/download/${file}" download>Download</a>
+        `;
+          list.appendChild(item);
+        });
+      }
+    </script>
+  </body>
+</html>
+
+<!-- Conclusion: This JavaScript file provides a complete set of operations for
+managing files in a Node.js application, including creating files with templates
+(HTML, JS, JSON), reading, writing, deleting, and listing files. Additionally,
+it supports generating PDF and DOCX files with specified content. These
+operations are handled via API requests to the backend, making it easy to
+interact with files stored in the server's upload directory. The code is simple
+to integrate into an HTML frontend and can be extended for more functionalities
+as needed. -->

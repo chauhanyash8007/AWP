@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Read Text File using AJAX</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 50px;
+      }
+      #content {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        display: inline-block;
+        min-width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Read Your Text File using AJAX</h2>
+    <button onclick="loadTextFile()">Click Me</button>
+    <div id="content">Click the button to load the text file.</div>
+
+    <script>
+      function loadTextFile() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "sample.txt", true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            document.getElementById("content").innerText = xhr.responseText;
+          }
+        };
+        xhr.send();
+      }
+    </script>
+  </body>
+</html>
+
+<!-- conclusion : This webpage demonstrates how to read a text file using AJAX. By
+clicking the button, the file is fetched asynchronously and displayed without
+reloading the page, ensuring a seamless user experience.
+
+1.What is AJAX? Enlist the advantages of AJAX. give ans as small as possiable
+
+AJAX (Asynchronous JavaScript and XML)
+AJAX is a technique for making asynchronous requests to a server without reloading the webpage.
+
+Advantages of AJAX:
+1. Faster Loading: Updates parts of a webpage without refreshing.
+2. Improved User Experience: Enables smooth and interactive UI.
+3. Reduced Server Load: Fetches only necessary data, reducing bandwidth.
+4. Asynchronous Processing: Allows background data fetching without blocking.
+5. Supports Multiple Data Formats: Works with JSON, XML, HTML, and plain text.
+
+2.Which type of files can be read using AJAX?
+
+Files That Can Be Read Using AJAX
+AJAX can read various file types, including:
+
+1. Text Files (.txt) - Plain text content.
+2. JSON Files (.json) - Structured data exchange format.
+3. XML Files (.xml) - Data representation format.
+4. HTML Files (.html) - Fetch and insert HTML content dynamically.
+5. CSV Files (.csv) - Tabular data used in spreadsheets.
+6. JavaScript Files (.js) - Load scripts dynamically.
+7. Images & Media (.jpg, .png, .gif, .mp3, .mp4) - Fetch binary content (needs Blob or ArrayBuffer). -->

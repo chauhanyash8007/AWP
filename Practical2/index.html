@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="studentApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Form using AngularJS</title>
+    <script src="/angular-1.8.2/angular.min.js"></script>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        text-align: center;
+        margin: 50px;
+        background-color: #f4f4f4;
+      }
+      .container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        width: 50%;
+      }
+      h2 {
+        color: #333;
+      }
+      form {
+        text-align: left;
+        margin-top: 20px;
+      }
+      label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .output {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        background: #e3f2fd;
+        text-align: left;
+      }
+      .output p {
+        font-size: 16px;
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body ng-controller="StudentController">
+    <div class="container">
+      <h2>For New Student Registration Form</h2>
+      <form>
+        <label
+          >Enrolment No.: <input type="text" ng-model="student.enrolmentNo"
+        /></label>
+        <label>Name: <input type="text" ng-model="student.name" /></label>
+        <label
+          >Semester: <input type="text" ng-model="student.semester"
+        /></label>
+        <label>Branch: <input type="text" ng-model="student.branch" /></label>
+        <label
+          >Mobile Number: <input type="text" ng-model="student.mobile"
+        /></label>
+        <label>Email: <input type="email" ng-model="student.email" /></label>
+        <label>Address: <textarea ng-model="student.address"></textarea></label>
+      </form>
+
+      <div class="output">
+        <h3>Student Entered Details:</h3>
+        <p><strong>Enrolment No.:</strong> {{ student.enrolmentNo }}</p>
+        <p><strong>Name:</strong> {{ student.name }}</p>
+        <p><strong>Semester:</strong> {{ student.semester }}</p>
+        <p><strong>Branch:</strong> {{ student.branch }}</p>
+        <p><strong>Mobile Number:</strong> {{ student.mobile }}</p>
+        <p><strong>Email:</strong> {{ student.email }}</p>
+        <p><strong>Address:</strong> {{ student.address }}</p>
+      </div>
+    </div>
+
+    <script>
+      var app = angular.module("studentApp", []);
+      app.controller("StudentController", function ($scope) {
+        $scope.student = {};
+      });
+    </script>
+  </body>
+</html>
+
+<!-- Conclusion: This enhanced student registration form uses AngularJS with a modern, responsive design. The form dynamically displays user input in real-time, improving user experience. -->
+
+<!-- Conclusion : This project demonstrates a student registration form using AngularJS
+directives and expressions. The form dynamically updates and displays entered
+student details in real time without requiring a page refresh. This enhances
+user experience by providing immediate feedback. Additionally, AngularJS's
+two-way data binding ensures seamless synchronization between input fields and
+displayed data. By using AngularJS, this form is efficient, interactive, and
+well-structured, making it an excellent example of modern web development
+practices. 🚀
+
+1.Enlist five most commonly used Angular JS directives and state their usages.
+
+Five Commonly Used AngularJS Directives
+1. ng-model - Binds input fields to a model.
+2. ng-bind - Displays model data in HTML.
+3. ng-repeat - Loops through arrays/collections.
+4. ng-if - Conditionally renders elements.
+5. ng-click - Binds functions to click events.
+
+2.Explain various ways to display the values of the variables on the page with suitable example.
+
+Ways to Display Variables in AngularJS
+
+Using {{ }} (Expressions)
+<p>{{ message }}</p>
+
+Using ng-bind Directive
+<p ng-bind="message"></p>
+
+Using ng-model for Input Binding
+<input type="text" ng-model="message">
+<p>{{ message }}</p>
+
+Using ng-repeat for Lists
+<ul><li ng-repeat="item in items">{{ item }}</li></ul>
+
+Using ng-if for Conditional Display
+<p ng-if="isVisible">This is visible!</p> -->

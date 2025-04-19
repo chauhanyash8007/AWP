@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Data</title>
+    <script src="../angular-1.8.2/angular.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+      }
+      h2 {
+        text-align: center;
+      }
+      table {
+        width: 80%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background: #fff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+        border: 2px solid black;
+      }
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid black;
+      }
+      th {
+        background-color: #4caf50;
+        color: white;
+        text-transform: uppercase;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+    </style>
+  </head>
+  <body ng-app="customerApp" ng-controller="CustomerController">
+    <h2>Customer List</h2>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Company</th>
+      </tr>
+      <tr ng-repeat="customer in customers">
+        <td>{{ customer.id }}</td>
+        <td>{{ customer.name }}</td>
+        <td>{{ customer.email }}</td>
+        <td>{{ customer.phone }}</td>
+        <td>{{ customer.address }}</td>
+        <td>{{ customer.company }}</td>
+      </tr>
+    </table>
+
+    <script>
+      var app = angular.module("customerApp", []);
+
+      app.controller("CustomerController", function ($scope, $http) {
+        $http.get("Customers.php").then(
+          function (response) {
+            $scope.customers = response.data;
+          },
+          function (error) {
+            console.error("Error fetching customer data:", error);
+          }
+        );
+      });
+    </script>
+  </body>
+</html>
+
+<!-- Conclusion : This project demonstrates how to use AngularJS to fetch and display
+data from a backend (in this case, a PHP file) in a tabular format on the
+frontend. It highlights the simplicity of using AngularJS for client-side
+interactions, such as making HTTP requests and dynamically rendering data on the
+webpage. The use of $http service makes it easy to communicate with the server
+and retrieve data, while ng-repeat provides an efficient way to display multiple
+rows of data in the HTML.
+
+1. $http
+Used to make HTTP requests to retrieve or send data to a server.
+$http.get('/api/data').then(function(response) {
+    $scope.data = response.data;
+});
+
+2. $scope
+Binds data between the controller and the view.
+$scope.message = "Hello, Angular!";
+
+3. $routeParams
+Retrieves route parameters in a single-page application (SPA).
+var userId = $routeParams.id;  // Retrieves 'id' from the URL
+
+4. $timeout
+Executes a function after a delay, similar to setTimeout in JavaScript.
+$timeout(function() {
+    $scope.message = "Updated after 2 seconds!";
+}, 2000);
+
+5. $filter
+Formats data, such as dates, numbers, or strings.
+var formattedDate = $filter('date')(new Date(), 'shortDate'); -->

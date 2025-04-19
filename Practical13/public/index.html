@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MongoDB Browser Delete</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+        background: #f4f4f4;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        background: white;
+      }
+      th,
+      td {
+        padding: 0.8rem;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+      th {
+        background: #333;
+        color: white;
+      }
+      button {
+        padding: 6px 12px;
+        border: none;
+        background: crimson;
+        color: white;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      input {
+        padding: 8px;
+        margin-top: 1rem;
+        width: 250px;
+      }
+      #message {
+        margin-top: 1rem;
+        font-weight: bold;
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MongoDB Document Manager</h1>
+
+    <button onclick="initSampleData()">➕ Load Sample Data</button>
+    <input id="deleteName" placeholder="Delete all by name..." />
+    <button onclick="deleteMany()">Delete Many</button>
+
+    <div id="message"></div>
+
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>_id</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Delete One</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      const message = document.getElementById("message");
+
+      async function initSampleData() {
+        await fetch("/init");
+        loadData();
+      }
+
+      async function loadData() {
+        const res = await fetch("/documents");
+        const data = await res.json();
+        const tbody = document.querySelector("#dataTable tbody");
+        tbody.innerHTML = "";
+        data.forEach((doc) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+          <td>${doc._id}</td>
+          <td>${doc.name}</td>
+          <td>${doc.email}</td>
+          <td><button onclick="deleteOne('${doc._id}')">Delete</button></td>
+        `;
+          tbody.appendChild(row);
+        });
+      }
+
+      async function deleteOne(id) {
+        const res = await fetch(`/deleteOne/${id}`, { method: "DELETE" });
+        const result = await res.json();
+        message.textContent = `🗑️ Deleted ${result.deleted} document`;
+        loadData();
+      }
+
+      async function deleteMany() {
+        const name = document.getElementById("deleteName").value;
+        if (!name) return alert("Enter a name to delete");
+
+        const res = await fetch(`/deleteMany/${name}`, { method: "DELETE" });
+        const result = await res.json();
+        message.textContent = `🗑️ Deleted ${result.deleted} documents`;
+        loadData();
+      }
+
+      // Initial load
+      loadData();
+    </script>
+  </body>
+</html>
+
+<!-- Conclusion : You can’t directly delete MongoDB documents from the browser for
+security reasons, but by using an Express.js backend with API endpoints, you can
+safely perform insert, deleteOne, deleteMany, and view operations. The browser
+interacts with these APIs using HTML and JavaScript, allowing for a smooth UI
+and real-time updates. This setup is secure, flexible, and ideal for modern web
+apps. -->

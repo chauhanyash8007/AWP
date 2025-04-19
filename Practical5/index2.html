@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html ng-app="clockApp">
+  <head>
+    <title>Analog Clock</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="app2.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+      }
+      .clock {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        border: 10px solid #333;
+        border-radius: 50%;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .hour,
+      .minute,
+      .second {
+        position: absolute;
+        bottom: 50%;
+        left: 50%;
+        transform-origin: bottom;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .hour {
+        width: 6px;
+        height: 70px;
+        background-color: #333;
+      }
+      .minute {
+        width: 4px;
+        height: 90px;
+        background-color: #666;
+      }
+      .second {
+        width: 2px;
+        height: 100px;
+        background-color: red;
+      }
+      .center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 16px;
+        background-color: #333;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+  <body ng-controller="ClockController">
+    <div class="clock">
+      <div class="hour" ng-style="getHourRotation()"></div>
+      <div class="minute" ng-style="getMinuteRotation()"></div>
+      <div class="second" ng-style="getSecondRotation()"></div>
+      <div class="center"></div>
+    </div>
+  </body>
+</html>

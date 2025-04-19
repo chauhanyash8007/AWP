@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AngularJS Form Validation</title>
+    <script src="../angular-1.8.2/angular.min.js"></script>
+    <style>
+      /* General Styling */
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      /* Form Container */
+      .form-container {
+        background: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 350px;
+      }
+
+      .form-container h2 {
+        text-align: center;
+        color: #333;
+      }
+
+      /* Input Field Styling */
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: border 0.3s ease-in-out;
+      }
+
+      input:focus {
+        border-color: #007bff;
+        outline: none;
+      }
+
+      input.ng-invalid.ng-touched {
+        border-color: red;
+        background-color: #ffe6e6;
+      }
+
+      /* Error Message Styling */
+      .error {
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+      }
+
+      .error-icon {
+        margin-right: 5px;
+        font-size: 14px;
+      }
+
+      /* Submit Button */
+      .submit-btn {
+        width: 100%;
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .submit-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .submit-btn:hover:not(:disabled) {
+        background: #0056b3;
+      }
+    </style>
+  </head>
+  <body ng-app="validationApp" ng-controller="FormController">
+    <div class="form-container">
+      <h2>Form Validation In AngularJS</h2>
+
+      <form name="userForm" novalidate>
+        <!-- Email -->
+        <div class="form-group">
+          <label>Email:</label>
+          <input
+            type="email"
+            name="email"
+            ng-model="user.email"
+            required
+            ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/"
+          />
+          <div
+            class="error"
+            ng-show="userForm.email.$touched && userForm.email.$invalid"
+          >
+            <span class="error-icon">⚠️</span> Enter a valid email.
+          </div>
+        </div>
+
+        <!-- Username -->
+        <div class="form-group">
+          <label>Username:</label>
+          <input
+            type="text"
+            name="username"
+            ng-model="user.username"
+            required
+            minlength="5"
+          />
+          <div
+            class="error"
+            ng-show="userForm.username.$touched && userForm.username.$invalid"
+          >
+            <span class="error-icon">⚠️</span> Username must be at least 5
+            characters.
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label>Password:</label>
+          <input
+            type="password"
+            name="password"
+            ng-model="user.password"
+            required
+            minlength="8"
+          />
+          <div
+            class="error"
+            ng-show="userForm.password.$touched && userForm.password.$invalid"
+          >
+            <span class="error-icon">⚠️</span> Password must be at least 8
+            characters.
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="submit-btn"
+          ng-disabled="userForm.$invalid"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+
+    <script>
+      var app = angular.module("validationApp", []);
+      app.controller("FormController", function ($scope) {
+        $scope.user = {}; // Initialize user object
+      });
+    </script>
+  </body>
+</html>
+
+<!-- Conclusion -> This AngularJS Form Validation program provides a simple yet
+effective way to validate user input fields for Email, Username, and Password.
+It ensures a smooth and user-friendly experience by integrating real-time
+validation feedback and a modern UI design. -->
+
+<!-- 1.Briefly discuss the usage of all the Input states and Form states with suitable examples.
+Input States in AngularJS
+
+1.$pristine (Untouched)
+The field is not modified after the page loads.
+Remains true until the user interacts with the field.
+<input type="text" name="username" ng-model="user.username">
+<p ng-show="userForm.username.$pristine">Username field is untouched.</p>
+
+2.$dirty (Modified)
+The field becomes dirty once the user types or modifies its value.
+<p ng-show="userForm.username.$dirty">You have modified the username field.</p>
+
+3.$touched (Lost Focus)
+The field becomes touched when it loses focus after the user clicks inside and then outside of it.
+<p ng-show="userForm.username.$touched">You have clicked and left the username field.</p>
+
+4.$untouched (Not Focused Yet)
+Remains true until the user focuses on the input field for the first time.
+<p ng-show="userForm.username.$untouched">You haven’t focused on this field yet.</p>
+
+5.$valid (Valid Input)
+The field is valid based on all applied validations (required, minlength, pattern, etc.).
+<p ng-show="userForm.email.$valid">✅ Email is valid.</p>
+
+6.$invalid (Invalid Input)
+The field fails validation due to incorrect input.
+<p ng-show="userForm.email.$invalid">❌ Invalid email address.</p>
+
+Form States in AngularJS
+
+1.$pristine (Form Not Modified)
+If no field has been modified, userForm.$pristine is true.
+<p ng-show="userForm.$pristine">Form has not been changed yet.</p>
+
+2.$dirty (Form Modified)
+Becomes true when any field is changed.
+<p ng-show="userForm.$dirty">Form has been modified.</p>
+
+3.$valid (Form is Valid)
+If all input fields are valid, userForm.$valid is true.
+This is often used to enable the submit button.
+<button ng-disabled="userForm.$invalid">Submit</button>
+
+4. $invalid (Form is Invalid)
+If any field is invalid, userForm.$invalid becomes true.
+<p ng-show="userForm.$invalid">Form contains errors. Please correct them.</p> -->
+
+<!-- 2.Discuss various CSS classes present in Angular JS used for these validation states.
+
+CSS Classes for Validation States in AngularJS
+
+AngularJS automatically adds and removes CSS classes to form elements based on their validation states.
+Default AngularJS Validation Classes
+
+CSS Class	         Applied When
+ng-pristine	       The field is not modified (pristine state).
+ng-dirty	         The field has been modified (dirty state).
+ng-touched	       The field has lost focus after being clicked.
+ng-untouched	     The field has not been focused yet.
+ng-valid	         The field passes all validation rules.
+ng-invalid	       The field fails any validation rule.
+ng-valid-[type]	   The field is valid for a specific type (e.g., ng-valid-email).
+ng-invalid-[type]	 The field is invalid for a specific type (e.g., ng-invalid-required). -->

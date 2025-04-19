@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>File Processor</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f4f8;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px 20px;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 30px;
+      }
+
+      .upload-container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .custom-file-upload {
+        display: inline-block;
+        padding: 12px 24px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+      }
+
+      .custom-file-upload:hover {
+        background-color: #0056b3;
+      }
+
+      #fileInput {
+        display: none;
+      }
+
+      #fileNameDisplay {
+        margin-bottom: 20px;
+        font-weight: bold;
+        color: #555;
+      }
+
+      .button-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .action-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        background-color: #28a745;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .action-button:hover {
+        background-color: #218838;
+      }
+
+      #output {
+        background-color: #e9ecef;
+        padding: 15px;
+        border-radius: 6px;
+        text-align: left;
+        max-height: 300px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>File Processor</h1>
+    <div class="upload-container">
+      <label for="fileInput" class="custom-file-upload">Choose Files</label>
+      <input type="file" id="fileInput" multiple />
+      <div id="fileNameDisplay">No files selected</div>
+      <div class="button-group">
+        <button class="action-button" onclick="handleAction('readSync')">
+          Read Files Synchronously
+        </button>
+        <button class="action-button" onclick="handleAction('readAsync')">
+          Read Files Asynchronously
+        </button>
+        <button class="action-button" onclick="handleAction('compress')">
+          Compress Files
+        </button>
+        <button class="action-button" onclick="handleAction('decompress')">
+          Decompress Files
+        </button>
+      </div>
+      <pre id="output">Output will appear here...</pre>
+    </div>
+
+    <script>
+      const fileInput = document.getElementById("fileInput");
+      const fileNameDisplay = document.getElementById("fileNameDisplay");
+      const output = document.getElementById("output");
+
+      fileInput.addEventListener("change", () => {
+        const files = fileInput.files;
+        if (files.length > 0) {
+          fileNameDisplay.textContent = `Selected Files: ${Array.from(files)
+            .map((file) => file.name)
+            .join(", ")}`;
+        } else {
+          fileNameDisplay.textContent = "No files selected";
+        }
+      });
+
+      function handleAction(action) {
+        const files = fileInput.files;
+
+        if (files.length === 0) {
+          output.textContent = "Please select at least one file first.";
+          return;
+        }
+
+        const formData = new FormData();
+        for (const file of files) {
+          formData.append("files", file);
+        }
+
+        fetch(`/file/${action}`, {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                `Server responded with ${response.status}: ${response.statusText}`
+              );
+            }
+            return response.blob();
+          })
+          .then((blob) => {
+            const operationName = {
+              readSync: "Read Files Synchronously",
+              readAsync: "Read Files Asynchronously",
+              compress: "Compress Files",
+              decompress: "Decompress Files",
+            }[action];
+
+            if (action === "compress") {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "compressed_files.zip";
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              output.textContent = `${operationName} - Files compressed and downloaded successfully.`;
+            } else if (action === "decompress") {
+              output.textContent = `${operationName} - Files decompressed successfully.`;
+            } else {
+              blob.text().then((text) => {
+                output.textContent = `${operationName}:\n\n${text}`;
+              });
+            }
+          })
+          .catch((err) => {
+            output.textContent = "Error: " + err.message;
+          });
+      }
+    </script>
+  </body>
+</html>
+
+<!-- Node.js File Processor
+
+Utilizes Express and Multer for handling file uploads.
+
+Supports operations: readSync, readAsync, compress, and decompress.
+
+Reads text files synchronously or asynchronously.
+
+Compresses files into a .zip archive using Archiver.
+
+Decompresses .gz and .zip files using zlib and unzipper.
+
+Provides a user-friendly interface via index.html.
+
+Displays operation status in the output section.
+
+Ensures proper error handling for unsupported file types.
+
+Cleans up uploaded files after processing.
+
+Runs on localhost:3000 for local testing. -->
+
+<!-- 1.Enlist various functions available in fs module and also state their usages.
+
+The fs (File System) module in Node.js provides a comprehensive set of functions to interact with the file system, enabling tasks such as reading, writing, updating, and deleting files. Here's an overview of some commonly used functions:​
+
+1. File Reading Functions:
+
+fs.readFile(path[, options], callback): Asynchronously reads the entire contents of a file.​
+
+fs.readFileSync(path[, options]): Synchronously reads the entire contents of a file.​
+
+fs.createReadStream(path[, options]): Creates a readable stream for a file, useful for reading large files in chunks. ​
+Medium
+
+2. File Writing Functions:
+
+fs.writeFile(path, data[, options], callback): Asynchronously writes data to a file, replacing the file if it already exists.​
+
+fs.writeFileSync(path, data[, options]): Synchronously writes data to a file, replacing the file if it exists.​
+
+fs.appendFile(path, data[, options], callback): Asynchronously appends data to a file.​
+
+fs.appendFileSync(path, data[, options]): Synchronously appends data to a file.​
+
+fs.createWriteStream(path[, options]): Creates a writable stream for a file, enabling streaming data to a file. ​
+Medium
+
+3. File Deletion Function:
+
+fs.unlink(path, callback): Asynchronously deletes a file.​
+
+fs.unlinkSync(path): Synchronously deletes a file.​
+
+4. File Renaming Function:
+
+fs.rename(oldPath, newPath, callback): Asynchronously renames or moves a file.​
+Kinsta®
+
+fs.renameSync(oldPath, newPath): Synchronously renames or moves a file.​
+
+5. Directory Operations:
+
+fs.readdir(path[, options], callback): Asynchronously reads the contents of a directory.​
+
+fs.readdirSync(path[, options]): Synchronously reads the contents of a directory.​
+
+fs.mkdir(path[, options], callback): Asynchronously creates a new directory.​
+
+fs.mkdirSync(path[, options]): Synchronously creates a new directory.​
+
+fs.rmdir(path[, options], callback): Asynchronously removes a directory.​
+
+fs.rmdirSync(path[, options]): Synchronously removes a directory.​
+
+6. File Stat Functions:
+
+fs.stat(path, callback): Asynchronously retrieves information about a file or directory.​
+
+fs.statSync(path): Synchronously retrieves information about a file or directory.​
+
+7. File Watching Function:
+
+fs.watch(filename[, options], listener): Watch for changes on a file or directory.​
+
+8. File Descriptor Functions:
+
+fs.open(path, flags[, mode], callback): Asynchronously opens a file and returns a file descriptor.​
+
+fs.openSync(path, flags[, mode]): Synchronously opens a file and returns a file descriptor.​
+
+fs.close(fd, callback): Closes a file descriptor.​
+
+fs.closeSync(fd): Synchronously closes a file descriptor. -->
+
+<!-- 2. Explain various functions available in zlib module.
+
+​The zlib module in Node.js provides a suite of functions for data compression and decompression, supporting formats like Gzip, Deflate, and Inflate. Below are key functions and their usages:​
+
+1. Compression Functions:
+zlib.createGzip([options]): Creates a Gzip compression stream. Useful for compressing data using the Gzip algorithm.
+zlib.createDeflate([options]): Creates a Deflate compression stream. Suitable for compressing data with the Deflate algorithm.
+zlib.gzip(input[, options], callback): Compresses input using Gzip asynchronously. The input can be a string or a buffer.
+zlib.deflate(input[, options], callback): Compresses input using Deflate asynchronously.
+
+2. Decompression Functions:
+zlib.createGunzip([options]): Creates a Gzip decompression stream.
+zlib.createInflate([options]): Creates an Inflate decompression stream.
+zlib.gunzip(input[, options], callback): Decompresses Gzip-compressed input asynchronously.
+zlib.inflate(input[, options], callback): Decompresses Deflate-compressed input asynchronously.
+
+3. Synchronous Compression and Decompression:
+zlib.gzipSync(input[, options]): Synchronously compresses input using Gzip.
+zlib.deflateSync(input[, options]): Synchronously compresses input using Deflate.
+zlib.gunzipSync(input[, options]): Synchronously decompresses Gzip-compressed input.
+zlib.inflateSync(input[, options]): Synchronously decompresses Deflate-compressed input.
+
+4. Stream-Based Compression and Decompression:
+These functions return streams that can be used to pipe data for efficient processing:
+zlib.createGzip(): Returns a writable stream for Gzip compression.
+zlib.createGunzip(): Returns a readable stream for Gzip decompression.
+zlib.createDeflate(): Returns a writable stream for Deflate compression.
+zlib.createInflate(): Returns a readable stream for Inflate decompression.
+
+5. Utility Functions:
+zlib.constants: Provides constants used in compression and decompression operations, such as flush values and return codes.
+zlib.flush([flushFlag], callback): Flushes the compression stream, ensuring all data is processed. Useful when dealing with large data streams. -->

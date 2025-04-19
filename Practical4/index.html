@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="studentApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Details</title>
+    <script src="/angular-1.8.2/angular.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        padding: 20px;
+      }
+      .table-hover tbody tr:hover {
+        background-color: #d4edda;
+        cursor: pointer;
+      }
+      .container {
+        max-width: 900px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      th {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body ng-controller="StudentController">
+    <div class="container">
+      <h2>Student Details Of IT Department</h2>
+      <input
+        type="text"
+        class="form-control mb-3"
+        placeholder="Search..."
+        ng-model="searchText"
+      />
+      <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th ng-click="sortColumn='enrolmentNo'; reverse=!reverse">
+              Enrolment No.
+            </th>
+            <th ng-click="sortColumn='name'; reverse=!reverse">Name</th>
+            <th ng-click="sortColumn='semester'; reverse=!reverse">Semester</th>
+            <th ng-click="sortColumn='branch'; reverse=!reverse">Branch</th>
+            <th ng-click="sortColumn='mobile'; reverse=!reverse">Mobile</th>
+            <th ng-click="sortColumn='email'; reverse=!reverse">Email</th>
+            <th ng-click="sortColumn='address'; reverse=!reverse">Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            ng-repeat="student in students | filter:searchText | orderBy:sortColumn:reverse"
+          >
+            <td>{{student.enrolmentNo}}</td>
+            <td>{{student.name}}</td>
+            <td>{{student.semester}}</td>
+            <td>{{student.branch}}</td>
+            <td>{{student.mobile}}</td>
+            <td>{{student.email}}</td>
+            <td>{{student.address}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      var app = angular.module("studentApp", []);
+      app.controller("StudentController", function ($scope) {
+        $scope.students = [
+          {
+            enrolmentNo: "220430116019",
+            name: "Yash",
+            semester: "6",
+            branch: "Information Technology",
+            mobile: "9876543210",
+            email: "Yash@gmail.com",
+            address: "sivaje circle, Bhavnagar",
+          },
+          {
+            enrolmentNo: "220430116014",
+            name: "Priyanshu",
+            semester: "4",
+            branch: "Information Technology",
+            mobile: "9123456789",
+            email: "priyanshu@gmail.com",
+            address: "456 Elm St, Bhavnagar",
+          },
+          {
+            enrolmentNo: "220430116015",
+            name: "Rishi",
+            semester: "8",
+            branch: "Information Technology",
+            mobile: "9988776655",
+            email: "rishi@gmail.com",
+            address: "789 Oak St, Bhavnagar",
+          },
+          {
+            enrolmentNo: "220430116017",
+            name: "Karan",
+            semester: "5",
+            branch: "Information Technology",
+            mobile: "9510776655",
+            email: "karan@gmail.com",
+            address: "SSGEC Bhavnagar",
+          },
+          {
+            enrolmentNo: "220430116023",
+            name: "Aviraj",
+            semester: "6",
+            branch: "Information Technology",
+            mobile: "7587295683",
+            email: "Aviraj@gmail.com",
+            address: "SSGEC Bhavnagar",
+          },
+          {
+            enrolmentNo: "220430116052",
+            name: "Kaushal",
+            semester: "7",
+            branch: "Information Technology",
+            mobile: "2949290480",
+            email: "Kaushal@gmail.com",
+            address: "SSGEC Bhavnagar",
+          },
+        ];
+        $scope.sortColumn = "enrolmentNo";
+        $scope.reverse = false;
+      });
+    </script>
+  </body>
+</html>
+
+<!-- conclusion -> the student details webpage introduces a search bar for filtering
+records dynamically. Additionally, it allows users to sort table columns by
+clicking on the headers. These enhancements improve user experience, making data
+retrieval and organization more efficient.
+
+1.Discuss various filters present in Angular JS with suitable examples.
+  filter – Searches data dynamically.
+<input ng-model="searchText"><ul>
+    <li ng-repeat="item in items | filter:searchText">{{ item }}</li></ul>
+  uppercase / lowercase – Converts text case.
+{{ "hello" | uppercase }} → HELLO
+{{ "WORLD" | lowercase }} → world
+  orderBy – Sorts an array by a property.
+<li ng-repeat="student in students | orderBy:'name'">{{ student.name }}</li>
+  currency – Formats numbers as currency.
+{{ 1000 | currency }} → $1,000.00
+  date – Formats dates.
+
+{{ today | date:'fullDate' }} → Monday, February 13, 2025 -->
+
+<!-- 2. -->
+<!-- <!DOCTYPE html>
+<html lang="en" ng-app="rupeeApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rupee Format</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  </head>
+  <body ng-controller="RupeeController">
+    <h2>Amount in Rupees</h2>
+    <p>Price: {{ amount | currency:'₹' }}</p>
+
+    <script>
+      var app = angular.module("rupeeApp", []);
+      app.controller("RupeeController", function ($scope) {
+        $scope.amount = 10000;
+      });
+    </script>
+  </body>
+</html> -->

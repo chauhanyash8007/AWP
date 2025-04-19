@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MongoDB - Select & Update</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f0f0;
+        padding: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+      th {
+        background: #333;
+        color: white;
+      }
+      input,
+      button {
+        padding: 8px;
+        margin: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+      button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #218838;
+      }
+      #message {
+        margin-top: 15px;
+        font-weight: bold;
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>MongoDB Document Viewer & Editor</h2>
+
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>_id</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Select</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h3>Edit Selected Document</h3>
+    <input type="text" id="docId" placeholder="ID (readonly)" readonly />
+    <input type="text" id="newName" placeholder="New Name" />
+    <input type="email" id="newEmail" placeholder="New Email" />
+    <button onclick="updateDocument()">Update</button>
+
+    <div id="message"></div>
+
+    <script>
+      async function loadData() {
+        const res = await fetch("/documents");
+        const data = await res.json();
+        const tableBody = document.querySelector("#dataTable tbody");
+        tableBody.innerHTML = "";
+        data.forEach((doc) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+          <td>${doc._id}</td>
+          <td>${doc.name}</td>
+          <td>${doc.email}</td>
+          <td><button onclick="selectDoc('${doc._id}')">Select</button></td>
+        `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      async function selectDoc(id) {
+        const res = await fetch(`/select/${id}`);
+        const doc = await res.json();
+        document.getElementById("docId").value = doc._id;
+        document.getElementById("newName").value = doc.name;
+        document.getElementById("newEmail").value = doc.email;
+        document.getElementById("message").textContent =
+          "✅ Document loaded. Ready to update.";
+      }
+
+      async function updateDocument() {
+        const id = document.getElementById("docId").value;
+        const name = document.getElementById("newName").value;
+        const email = document.getElementById("newEmail").value;
+
+        if (!id || !name || !email) {
+          alert("Please fill all fields to update.");
+          return;
+        }
+
+        const res = await fetch(`/update/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email }),
+        });
+
+        const result = await res.json();
+        if (result.updated > 0) {
+          document.getElementById("message").textContent =
+            "✅ Document updated successfully!";
+          loadData();
+        } else {
+          document.getElementById("message").textContent =
+            "⚠️ No document updated.";
+        }
+      }
+
+      // Load table on page load
+      loadData();
+    </script>
+  </body>
+</html>
+
+<!-- Conclusion : This project demonstrates how to integrate Node.js, MongoDB, and a
+browser-based UI to perform real-time selection and update operations on
+database documents. Users can easily view all records, select any document, edit
+its fields, and update it seamlessly. This builds a strong foundation for
+full-stack CRUD applications. -->

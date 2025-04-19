@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="studentApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Details</title>
+    <script src="/angular-1.8.2/angular.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        padding: 20px;
+      }
+      .table-hover tbody tr:hover {
+        background-color: #d4edda;
+        cursor: pointer;
+      }
+      .container {
+        max-width: 900px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      tr,
+      td {
+        border: 2px solid black !important;
+      }
+    </style>
+  </head>
+  <body ng-controller="StudentController">
+    <div class="container">
+      <h2>Student Details Of IT Department</h2>
+      <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th>Enrolment No.</th>
+            <th>Name</th>
+            <th>Semester</th>
+            <th>Branch</th>
+            <th>Mobile</th>
+            <th>Email</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="student in students">
+            <td>{{student.enrolmentNo}}</td>
+            <td>{{student.name}}</td>
+            <td>{{student.semester}}</td>
+            <td>{{student.branch}}</td>
+            <td>{{student.mobile}}</td>
+            <td>{{student.email}}</td>
+            <td>{{student.address}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      var app = angular.module("studentApp", []);
+      app.controller("StudentController", function ($scope) {
+        $scope.students = [
+          {
+            enrolmentNo: "220430116019",
+            name: "Yash",
+            semester: "6",
+            branch: "Information Technology",
+            mobile: "9876543210",
+            email: "Yash@gmail.com",
+            address: "sivaje circle, Bhavnagar",
+          },
+          {
+            enrolmentNo: "220430116014",
+            name: "Priyanshu",
+            semester: "4",
+            branch: "Information Technology",
+            mobile: "9123456789",
+            email: "priyanshu@gmail.com",
+            address: "456 Elm St, Bhavnagar",
+          },
+          {
+            enrolmentNo: "220430116015",
+            name: "Rishi",
+            semester: "8",
+            branch: "Information Technology",
+            mobile: "9988776655",
+            email: "rishi@gmail.com",
+            address: "789 Oak St, Bhavnagar",
+          },
+          {
+            enrolmentNo: "220430116017",
+            name: "Karan",
+            semester: "5",
+            branch: "Information Technology",
+            mobile: "9510776655",
+            email: "karan@gmail.com",
+            address: "SSGEC Bhavnagar",
+          },
+          {
+            enrolmentNo: "220430116023",
+            name: "Aviraj",
+            semester: "6",
+            branch: "Information Technology",
+            mobile: "7587295683",
+            email: "Aviraj@gmail.com",
+            address: "SSGEC Bhavnagar",
+          },
+          {
+            enrolmentNo: "220430116052",
+            name: "Kaushal",
+            semester: "7",
+            branch: "Information Technology",
+            mobile: "2949290480",
+            email: "Kaushal@gmail.com",
+            address: "SSGEC Bhavnagar",
+          },
+        ];
+      });
+    </script>
+  </body>
+</html>
+
+<!-- conclusion -> This webpage effectively utilizes AngularJS to dynamically display
+student details in a structured tabular format. The CSS ensures an aesthetically
+pleasing layout with hover effects and alternate row coloring for readability.
+This approach makes it easy to manage and update student data in a user-friendly
+manner.
+
+1. -> 
+MVC Architecture (Model-View-Controller) is a design pattern used in software development to separate concerns:
+Model: Manages data and business logic.
+View: Handles UI and presentation.
+Controller: Acts as an intermediary, processing user input and updating the Model and View.
+
+2 ->
+ng-controller: Defines a controller to manage data and logic.
+ng-repeat: Loops through an array to display dynamic content
+
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="MyController">
+    <h3>Student List</h3>
+    <ul>
+        <li ng-repeat="student in students">{{ student.name }} - {{ student.course }}</li>
+    </ul>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('MyController', function($scope) {
+            $scope.students = [
+                { name: 'John', course: 'Math' },
+                { name: 'Jane', course: 'Science' },
+                { name: 'Mike', course: 'History' }
+            ];
+        });
+    </script>
+</body>
+</html> -->

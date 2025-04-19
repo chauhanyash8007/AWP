@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AngularJS Routing</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script>
+      var app = angular.module("myApp", ["ngRoute"]);
+
+      app.config(function ($routeProvider, $locationProvider) {
+        $locationProvider.hashPrefix(""); // Ensures proper URL handling
+
+        $routeProvider
+          .when("/home", {
+            templateUrl: "home.html",
+            controller: "HomeController",
+          })
+          .when("/about", {
+            templateUrl: "about.html",
+            controller: "AboutController",
+          })
+          .when("/contact", {
+            templateUrl: "contact.html",
+            controller: "ContactController",
+          })
+          .otherwise({
+            redirectTo: "/home",
+          });
+      });
+
+      app.controller("MainController", function ($scope) {
+        $scope.appTitle = "AngularJS Routing";
+      });
+
+      app.controller("HomeController", function ($scope) {
+        $scope.message = "Welcome to the Home Page!";
+      });
+
+      app.controller("AboutController", function ($scope) {
+        $scope.message = "Welcome to the About Page! Learn more about us here.";
+      });
+
+      app.controller("ContactController", function ($scope) {
+        $scope.message = "Get in touch with us!";
+      });
+    </script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      nav {
+        margin-bottom: 20px;
+      }
+      nav a {
+        margin-right: 15px;
+        text-decoration: none;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <h1>{{ appTitle }}</h1>
+    <nav>
+      <a href="#/home">Home</a> | <a href="#/about">About</a> |
+      <a href="#/contact">Contact</a>
+    </nav>
+    <div ng-view></div>
+
+    <!-- Home Page Template -->
+    <script type="text/ng-template" id="home.html">
+      <h2>Home</h2>
+      <p>{{ message }}</p>
+    </script>
+
+    <!-- About Page Template -->
+    <script type="text/ng-template" id="about.html">
+      <h2>About</h2>
+      <p>{{ message }}</p>
+    </script>
+
+    <!-- Contact Page Template -->
+    <script type="text/ng-template" id="contact.html">
+      <h2>Contact</h2>
+      <p>{{ message }}</p>
+    </script>
+  </body>
+</html>
+
+<!-- Conclusion -> This AngularJS routing example demonstrates how to navigate
+between different views without reloading the page. Using ngRoute, we define
+multiple routes and associate them with controllers and templates. This approach
+enhances the user experience by enabling seamless single-page application (SPA)
+behavior. -->
+
+<!-- 1. Write a note on : Routing in Angular JS. -->
+<!-- Note on Routing in AngularJS Routing in AngularJS is implemented using the
+ngRoute module, which allows developers to create a single-page application
+(SPA) with multiple views. By defining routes in the $routeProvider
+configuration, different templates and controllers can be dynamically loaded
+based on the URL. The ng-view directive acts as a placeholder for the loaded
+content, enabling seamless navigation without full-page reloads. This enhances
+user experience by making web applications more efficient and interactive. -->
+
+<!-- 2.State the usefulness of ng-view directive. Explain various ways to use it. -->
+<!-- Usefulness of ng-view Directive:
+The ng-view directive in AngularJS is used as a placeholder where dynamically loaded views are displayed based on the current route. It helps in creating single-page applications (SPAs) by enabling seamless navigation between different components without refreshing the page. This improves performance and enhances user experience.
+
+Various Ways to Use ng-view:
+Basic Usage:
+
+Place <div ng-view></div> in the main HTML file, and define routes using $routeProvider.
+
+Using Template Files:
+
+Each route can load an external HTML template using templateUrl (as seen in the provided example).
+
+Inline Templates:
+
+Define templates directly in the route configuration using template: '<h2>Home Page</h2>'.
+
+Multiple Views (Alternative Approach):
+
+Though ng-view supports a single view, multiple views can be managed using ng-include or ui-router for advanced state management. -->
